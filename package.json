@@ -6,12 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "bin" : "bin/metrik",
+  "bin": "bin/metrik",
   "author": "csquared",
   "license": "BSD-2-Clause",
   "dependencies": {
     "logfmt": "~0.15.0",
     "through": "~2.3.4",
-    "split": "~0.2.10"
+    "split": "~0.2.10",
+    "optimist": "~0.6.0"
+  },
+  "devDependencies": {
+    "concat-stream": "~1.0.1",
+    "mocha" : "*"
   }
 }
