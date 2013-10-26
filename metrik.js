@@ -5,14 +5,13 @@ var argv    = require('optimist').argv;
 
 var counts = {};
 var metrikFilter = through(function(line){
-  //hack to get the leading BS out of the line
-  if(/\]\:/.test(line)){
-    line = line.split(']:').slice(1).join()
-  }
-
   var hasMetrics = false;
   if(/count#/.test(line)){
     hasMetrics = true;
+    //hack to get the leading BS out of the line
+    if(/\]\:/.test(line)){
+      line = line.split(']:').slice(1).join()
+    }
     var data = logfmt.parse(line);
     var keys = Object.keys(data);
 
