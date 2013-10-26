@@ -1,12 +1,12 @@
-# `metrik`
+# metrik
 
 Metrics aggregator for logfmt-style metrics
 
-## `count`
+### `count#`
 
 Sums `count#` style metrics and includes other key=value pairs.
 
-## `measure`
+### `measure#`
 
 Planned support for mean, perc95, and perc99.
 
