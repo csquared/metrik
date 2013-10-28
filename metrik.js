@@ -4,6 +4,7 @@ var split   = require('split');
 var argv    = require('optimist').argv;
 var _       = require('underscore')
 
+var precision = argv.p || argv.precision;
 var counts = {};
 var measures = {};
 var metrikFilter = through(function(line){
@@ -85,11 +86,11 @@ var flushMetrics = function(){
       data.median = sorted[Math.floor(n/2)];
       data.perc95 = perc95(sorted);
       data.perc99 = perc99(sorted);
-      if(argv.precision){
-        if(data.mean) data.mean = data.mean.toFixed(argv.precision)
-        if(data.median) data.median = data.median.toFixed(argv.precision)
-        if(data.perc95) data.perc95 = data.perc95.toFixed(argv.precision)
-        if(data.perc99) data.perc99 = data.perc99.toFixed(argv.precision)
+      if(precision){
+        if(data.mean) data.mean = data.mean.toFixed(precision)
+        if(data.median) data.median = data.median.toFixed(precision)
+        if(data.perc95) data.perc95 = data.perc95.toFixed(precision)
+        if(data.perc99) data.perc99 = data.perc99.toFixed(precision)
       }
       if(measures[key].source) data.source = measures[key].source;
       logfmt.log(data)

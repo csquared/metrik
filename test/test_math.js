@@ -21,6 +21,7 @@ suite('metrik math', function(){
       data = data.toString().replace("\n",'');
       var logged = logfmt.parse(data);
       assert.equal(logged['metrik'], 'thing')
+      assert.equal(logged['n'], '100')
       assert.equal(logged['perc95'], '30')
       assert.equal(logged['perc99'], '50')
       done();
@@ -46,6 +47,7 @@ suite('metrik math', function(){
       data = data.toString().replace("\n",'');
       var logged = logfmt.parse(data);
       assert.equal(logged['metrik'], 'thing')
+      assert.equal(logged['n'], '1000')
       assert.equal(logged['perc95'], '30')
       assert.equal(logged['perc99'], '50')
       done();
