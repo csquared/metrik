@@ -2,11 +2,13 @@ var logfmt  = require('logfmt');
 var through = require('through');
 var split   = require('split');
 var argv    = require('optimist').argv;
+var _       = require('underscore')
 
 var counts = {};
+var measures = {};
 var metrikFilter = through(function(line){
   var hasMetrics = false;
-  if(/count#/.test(line)){
+  if(/(count|measure)#/.test(line)){
     hasMetrics = true;
     //hack to get the leading BS out of the line
     if(/\]\:/.test(line)){
@@ -23,6 +25,15 @@ var metrikFilter = through(function(line){
         data[key]   = parseInt(data[key]) + (counts[key][key] || 0)
         counts[key] = data
       }
+
+      if(/measure#/.test(key)){
+        measures[key] = measures[key] || []
+        var number = parseFloat(data[key])
+        var units  = data[key].replace(number,'')
+        measures[key].push(number)
+        measures[key].units = units
+        measures[key].source = data.source
+      }
     }
   }
 
@@ -38,6 +49,21 @@ var flushMetrics = function(){
       logfmt.log(counts[key])
     }
     counts = {}
+  }
+
+  if(Object.keys(measures).length > 0){
+    for(var key in measures){
+      var n = measures[key].length
+      var units = measures[key].units
+      var sum = _.reduce(measures[key], function(memo, num){ return memo + num; }, 0);
+      var mean = sum / n;
+      var mean_key = key + '.mean'
+      var data = {}
+      data[mean_key] = mean + units;
+      if(measures[key].source) data.source = measures[key].source;
+      logfmt.log(data)
+      if(n > 100) measures[key] = [];
+    }
   }
 }
 

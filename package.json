@@ -13,10 +13,11 @@
     "logfmt": "~0.15.0",
     "through": "~2.3.4",
     "split": "~0.2.10",
-    "optimist": "~0.6.0"
+    "optimist": "~0.6.0",
+    "underscore": "~1.5.2"
   },
   "devDependencies": {
     "concat-stream": "~1.0.1",
-    "mocha" : "*"
+    "mocha": "*"
   }
 }
