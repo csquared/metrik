@@ -19,7 +19,7 @@ suite('metrik', function(){
     metrik.stdin.end();
   })
 
-  test('measure# gets mean', function(done){
+  test('measure# gets n, units, mean, median, perc95, and perc99', function(done){
     var metrik = spawn('./bin/metrik');
 
     metrik.stdin.write('measure#thing=10ms\n')
@@ -29,7 +29,13 @@ suite('metrik', function(){
 
     metrik.stdout.pipe(concat(function(data){
       var logged = logfmt.parse(data.toString());
-      assert.equal(logged['measure#thing.mean'], '20ms')
+      assert.equal(logged['metrik'], 'thing')
+      assert.equal(logged['n'], '3')
+      assert.equal(logged['units'], 'ms')
+      assert.equal(logged['mean'], '20')
+      assert.equal(logged['median'], '20')
+      assert.equal(logged['perc95'], '30')
+      assert.equal(logged['perc99'], '30')
       done();
     }))
   })

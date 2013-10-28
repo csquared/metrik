@@ -29,9 +29,9 @@ var metrikFilter = through(function(line){
       if(/measure#/.test(key)){
         measures[key] = measures[key] || []
         var number = parseFloat(data[key])
-        var units  = data[key].replace(number,'')
+        var units  = data[key].match(/[a-zA-Z]+$/)
+        if(units) measures[key].units = units[0]
         measures[key].push(number)
-        measures[key].units = units
         measures[key].source = data.source
       }
     }
@@ -42,6 +42,27 @@ var metrikFilter = through(function(line){
     this.queue(line + "\n")
   }
 })
+
+function mean(array){
+  var n = array.length;
+  var sum = _.reduce(array,
+      function(memo, num){ return memo + num; }, 0);
+  return sum / n;
+}
+
+function perc95(array){
+  var n = array.length;
+  var last_n = Math.floor(n / 100) * 5;
+  if(last_n === 0) last_n = 1;
+  return mean(array.slice(array.length - last_n));
+}
+
+function perc99(array){
+  var n = array.length;
+  var last_n = Math.floor(n / 100);
+  if(last_n === 0) last_n = 1;
+  return mean(array.slice(array.length - last_n));
+}
 
 var flushMetrics = function(){
   if(Object.keys(counts).length > 0){
@@ -55,17 +76,28 @@ var flushMetrics = function(){
     for(var key in measures){
       var n = measures[key].length
       var units = measures[key].units
-      var sum = _.reduce(measures[key], function(memo, num){ return memo + num; }, 0);
-      var mean = sum / n;
-      var mean_key = key + '.mean'
+      var sorted = _.sortBy(measures[key], function(v) { return v })
       var data = {}
-      data[mean_key] = mean + units;
+      data.metrik = key.replace('measure#','')
+      data.n = n
+      if(units) data.units = units
+      data.mean = mean(measures[key]);
+      data.median = sorted[Math.floor(n/2)];
+      data.perc95 = perc95(sorted);
+      data.perc99 = perc99(sorted);
+      if(argv.precision){
+        if(data.mean) data.mean = data.mean.toFixed(argv.precision)
+        if(data.median) data.median = data.median.toFixed(argv.precision)
+        if(data.perc95) data.perc95 = data.perc95.toFixed(argv.precision)
+        if(data.perc99) data.perc99 = data.perc99.toFixed(argv.precision)
+      }
       if(measures[key].source) data.source = measures[key].source;
       logfmt.log(data)
       if(n > 100) measures[key] = [];
     }
   }
 }
+
 
 process.stdin
   .pipe(split())
