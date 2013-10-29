@@ -64,6 +64,7 @@ var flushMetrics = function(){
 
   if(Object.keys(measures).length > 0){
     for(var key in measures){
+      if(!measures[key]) continue;
       if(measures[key].length === 0) continue;
       if(argv.histo){
         logfmt.log(stats.histo_measures(measures, argv.histo));

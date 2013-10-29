@@ -23,6 +23,7 @@ exports.perc99 = function perc99(array){
 exports.sample_measures = function(measures){
   if(Object.keys(measures).length > 0){
     for(var key in measures){
+      if(!measures[key]) continue;
       var separator = exports.separator || '.'
       var n = measures[key].length
       var units = measures[key].units
@@ -64,6 +65,7 @@ exports.histo = function(array, bins){
 exports.histo_measures = function(measures, bins){
   if(Object.keys(measures).length > 0){
     for(var key in measures){
+      if(!measures[key]) continue;
       var separator = exports.separator || '.'
       var n = measures[key].length
       var units = measures[key].units
