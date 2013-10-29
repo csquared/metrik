@@ -30,7 +30,7 @@ suite('stats', function(){
 
 suite('metrik math', function(){
   test('perc95 and perc99 w. n=100', function(done){
-    var metrik = spawn('./bin/metrik');
+    var metrik = spawn('./bin/metrik', ['--avg']);
 
     for(var i=0; i < 100; i++){
       metrik.stdin.write('measure#thing=' + i + '\n')
@@ -48,7 +48,7 @@ suite('metrik math', function(){
   })
 
   test('perc95 and perc99 w. n=1000', function(done){
-    var metrik = spawn('./bin/metrik');
+    var metrik = spawn('./bin/metrik', ['--avg']);
 
     for(var j=0; j<10; j++){
       for(var i=0; i < 100; i++){

@@ -42,7 +42,7 @@ suite('metrik', function(){
   })
 
   test('measure# doesnt blow up on true', function(done){
-    var metrik = spawn('./bin/metrik');
+    var metrik = spawn('./bin/metrik', ['--avg']);
     metrik.stdin.write('measure#thing=true')
     metrik.stdin.end();
 
@@ -53,8 +53,8 @@ suite('metrik', function(){
     }))
   })
 
-  test('measure# gets n, units, mean, median, perc95, and perc99', function(done){
-    var metrik = spawn('./bin/metrik');
+  test('measure# w. --avg gets n, units, mean, median, perc95, and perc99', function(done){
+    var metrik = spawn('./bin/metrik', ['--avg']);
 
     metrik.stdin.write('measure#thing=10ms\n')
     metrik.stdin.write('measure#thing=20ms\n')
@@ -77,7 +77,7 @@ suite('metrik', function(){
   })
 
   test('passes through', function(done){
-    var metrik = spawn('./bin/metrik');
+    var metrik = spawn('./bin/metrik', ['--avg']);
     metrik.stdout.pipe(concat(function(data){
       assert.equal("dont fuck with this\n", data.toString())
       done();
