@@ -32,7 +32,7 @@ var metrikFilter = through(function(line){
         counts[key] = data
       }
 
-      if(/measure#/.test(key)){
+      if((argv.histo || argv.avg) && /measure#/.test(key)){
         var number = parseFloat(data[key])
         if(isNaN(number)) {
           hasMetrics = false;
@@ -66,10 +66,8 @@ var flushMetrics = function(){
     for(var key in measures){
       if(!measures[key]) continue;
       if(measures[key].length === 0) continue;
-      if(argv.histo){
-        logfmt.log(stats.histo_measures(measures, argv.histo));
-      }
-      else { logfmt.log(stats.sample_measures(measures)); }
+      if(argv.histo){ logfmt.log(stats.histo_measures(measures, argv.histo)); }
+      if(argv.avg) { logfmt.log(stats.sample_measures(measures)); }
       if(measures[key].length > MAX_SAMPLES) measures[key] = null;
     }
   }
