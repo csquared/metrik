@@ -10,16 +10,14 @@ exports.mean = function mean(array){
 
 exports.perc95 = function perc95(array){
   var n = array.length;
-  var last_n = Math.floor(n / 100) * 5;
-  if(last_n === 0) last_n = 1;
-  return exports.mean(array.slice(array.length - last_n));
+  var top_5 = array.length - Math.ceil(array.length * 0.05) - 1;
+  return array[top_5];
 }
 
 exports.perc99 = function perc99(array){
   var n = array.length;
-  var last_n = Math.floor(n / 100);
-  if(last_n === 0) last_n = 1;
-  return exports.mean(array.slice(array.length - last_n));
+  var top_99 = array.length - Math.ceil(array.length * 0.01) - 1;
+  return array[top_99];
 }
 
 

@@ -24,14 +24,17 @@ suite('metrik', function(){
 
     metrik.stdin.write('measure#thing=10ms\n')
     metrik.stdin.write('measure#thing=20ms\n')
+    metrik.stdin.write('measure#thing=30ms\n')
+    metrik.stdin.write('measure#thing=10ms\n')
+    metrik.stdin.write('measure#thing=20ms\n')
     metrik.stdin.write('measure#thing=30ms')
     metrik.stdin.end();
 
     metrik.stdout.pipe(concat(function(data){
       var logged = logfmt.parse(data.toString());
-      assert.equal(logged['n'], '3')
+      assert.equal(logged['n'], '6')
       assert.equal(logged['units'], 'ms')
-      assert.equal(logged['sample#thing.mean'], '20')
+      assert.equal(logged['sample#thing.mean'],   '20')
       assert.equal(logged['sample#thing.median'], '20')
       assert.equal(logged['sample#thing.perc95'], '30')
       assert.equal(logged['sample#thing.perc99'], '30')
