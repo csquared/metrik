@@ -32,28 +32,48 @@ exports.counts = function(counts){
   }
 }
 
-exports.measures = function(measures){
+exports.sample_measures = function(measures){
   if(Object.keys(measures).length > 0){
     for(var key in measures){
+      var separator = exports.separator || '.'
       var n = measures[key].length
       var units = measures[key].units
       var sorted = _.sortBy(measures[key], function(v) { return v })
       var data = {}
-      data.metrik = key.replace('measure#','')
-      data.n = n
+      var metrik = key.replace(/^measure#/,'sample#') + separator
       if(units) data.units = units
-      data.mean = exports.mean(measures[key]);
-      data.median = sorted[Math.floor(n/2)];
-      data.perc95 = exports.perc95(sorted);
-      data.perc99 = exports.perc99(sorted);
-      var precision = exports.precision;
-      if(precision){
-        if(data.mean) data.mean = data.mean.toFixed(precision)
-        if(data.median) data.median = data.median.toFixed(precision)
-        if(data.perc95) data.perc95 = data.perc95.toFixed(precision)
-        if(data.perc99) data.perc99 = data.perc99.toFixed(precision)
-      }
+      var precision = exports.precision || 10;
+      data[metrik + 'mean']   = exports.mean(measures[key]);
+      data[metrik + 'median'] = sorted[Math.floor(n/2)];
+      data[metrik + 'perc95'] = exports.perc95(sorted);
+      data[metrik + 'perc99'] = exports.perc99(sorted);
       if(measures[key].source) data.source = measures[key].source;
+      data.now = (new Date()).getTime();
+      data.n = n
+      logfmt.log(data)
+      if(n > 100) measures[key] = [];
+    }
+  }
+}
+
+exports.histo_measures = function(measures){
+  if(Object.keys(measures).length > 0){
+    for(var key in measures){
+      var separator = exports.separator || '.'
+      var n = measures[key].length
+      var units = measures[key].units
+      var sorted = _.sortBy(measures[key], function(v) { return v })
+      var data = {}
+      var metrik = key.replace(/^measure#/,'sample#') + separator
+      if(units) data.units = units
+      var precision = exports.precision || 10;
+      data[metrik + 'mean']   = exports.mean(measures[key]);
+      data[metrik + 'median'] = sorted[Math.floor(n/2)];
+      data[metrik + 'perc95'] = exports.perc95(sorted);
+      data[metrik + 'perc99'] = exports.perc99(sorted);
+      if(measures[key].source) data.source = measures[key].source;
+      data.now = (new Date()).getTime();
+      data.n = n
       logfmt.log(data)
       if(n > 100) measures[key] = [];
     }

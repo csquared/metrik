@@ -6,6 +6,7 @@ var _       = require('underscore')
 
 var stats   = require('./stats')
 stats.precision = argv.p || argv.precision;
+stats.separator = argv.s || argv.separator;
 
 var counts = {};
 var measures = {};
@@ -50,7 +51,7 @@ var metrikFilter = through(function(line){
 var flushMetrics = function(){
   stats.counts(counts);
   counts = {}
-  stats.measures(measures);
+  stats.sample_measures(measures);
 }
 
 process.stdin

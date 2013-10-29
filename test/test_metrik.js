@@ -29,13 +29,12 @@ suite('metrik', function(){
 
     metrik.stdout.pipe(concat(function(data){
       var logged = logfmt.parse(data.toString());
-      assert.equal(logged['metrik'], 'thing')
       assert.equal(logged['n'], '3')
       assert.equal(logged['units'], 'ms')
-      assert.equal(logged['mean'], '20')
-      assert.equal(logged['median'], '20')
-      assert.equal(logged['perc95'], '30')
-      assert.equal(logged['perc99'], '30')
+      assert.equal(logged['sample#thing.mean'], '20')
+      assert.equal(logged['sample#thing.median'], '20')
+      assert.equal(logged['sample#thing.perc95'], '30')
+      assert.equal(logged['sample#thing.perc99'], '30')
       done();
     }))
   })
