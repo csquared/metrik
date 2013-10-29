@@ -8,7 +8,9 @@ Sums `count#` style metrics and includes other key=value pairs.
 
 ### `measure#`
 
-Emits `mean`, `median`, `perc95`, and `perc99` for `measure#` style metrics.
+Emits `mean`, `median`, `perc95`, and `perc99` for `measure#` style metrics
+as `sample#` style metrics with configurable separator.
+
 Includes `n` and `units`.
 
 ## Usage
@@ -29,8 +31,8 @@ Includes `n` and `units`.
 
     count#vault_usage.http_201=3
     count#vault_usage.http_2xx=2
-    metrik=products_usage_events_close n=1 units=ms mean=0.070309922 median=0.070309922 perc95=0.070309922 perc99=0.070309922
-    metrik=products_usage_events_open n=1 units=ms mean=0.010993464 median=0.010993464 perc95=0.010993464 perc99=0.010993464
+    units=ms sample#products_usage_events_close.mean=0.070309922 sample#products_usage_events_close.median=0.070309922 sample#products_usage_events_close.perc95= sample#products_usage_events_close.perc99= now=1383021881431 n=1
+    units=ms sample#products_usage_events_open.mean=0.010993464 sample#products_usage_events_open.median=0.010993464 sample#products_usage_events_open.perc95= sample#products_usage_events_open.perc99= now=1383021881431 n=1
 
   Use it on your dyno:
 
