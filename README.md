@@ -2,6 +2,8 @@
 
 Metrics aggregator for logfmt-style metrics
 
+Assumes a single `source`
+
 ### `count#`
 
 Sums `count#` style metrics and includes other key=value pairs.
