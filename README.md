@@ -10,8 +10,12 @@ Sums `count#` style metrics and includes other key=value pairs.
 
 ### `measure#`
 
+#### with `--avg`
 Emits `mean`, `median`, `perc95`, and `perc99` for `measure#` style metrics
 as `sample#` style metrics with configurable separator.
+
+#### with `--histo <n>`
+Emits `bin<n>` with mean in each bin for bins numbered 1 through n.
 
 Includes `n` and `units`.
 
