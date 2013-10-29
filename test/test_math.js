@@ -13,6 +13,19 @@ suite('stats', function(){
     var result = stats.perc95(array);
     assert.equal(94, result);
   })
+
+  test('histo w. n=100', function(){
+    var array = []
+    for(var i = 0; i < 100; i++){
+      array[i] = i+1;
+    }
+    var histo = stats.histo(array, 5);
+    assert.equal(10.5, histo[0]);
+    assert.equal(30.5, histo[1]);
+    assert.equal(50.5, histo[2]);
+    assert.equal(70.5, histo[3]);
+    assert.equal(90.5, histo[4]);
+  })
 })
 
 suite('metrik math', function(){

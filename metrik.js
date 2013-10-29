@@ -51,7 +51,10 @@ var metrikFilter = through(function(line){
 var flushMetrics = function(){
   stats.counts(counts);
   counts = {}
-  stats.sample_measures(measures);
+  if(argv.histo){
+    stats.histo_measures(measures, argv.histo);
+  }
+  else { stats.sample_measures(measures); }
 }
 
 process.stdin

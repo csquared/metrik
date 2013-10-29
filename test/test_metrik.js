@@ -19,6 +19,28 @@ suite('metrik', function(){
     metrik.stdin.end();
   })
 
+  test('measure# w. --histo <n> gets n bins of averages', function(done){
+    var metrik = spawn('./bin/metrik',['--histo', '3']);
+
+    metrik.stdin.write('measure#thing=10ms\n')
+    metrik.stdin.write('measure#thing=20ms\n')
+    metrik.stdin.write('measure#thing=30ms\n')
+    metrik.stdin.write('measure#thing=10ms\n')
+    metrik.stdin.write('measure#thing=20ms\n')
+    metrik.stdin.write('measure#thing=30ms')
+    metrik.stdin.end();
+
+    metrik.stdout.pipe(concat(function(data){
+      var logged = logfmt.parse(data.toString());
+      assert.equal(logged['n'], '6')
+      assert.equal(logged['units'], 'ms')
+      assert.equal(logged['sample#thing.bin1'], '10')
+      assert.equal(logged['sample#thing.bin2'], '20')
+      assert.equal(logged['sample#thing.bin3'], '30')
+      done();
+    }))
+  })
+
   test('measure# gets n, units, mean, median, perc95, and perc99', function(done){
     var metrik = spawn('./bin/metrik');
 
