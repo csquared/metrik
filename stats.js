@@ -81,7 +81,7 @@ exports.histo_measures = function(measures, bins){
       data.n = n
       data.units = units;
       data.type = 'histo'
-      logfmt.log(data)
+      return data;
     }
   }
 }
