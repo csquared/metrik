@@ -10,11 +10,11 @@ stats.separator = argv.s || argv.separator;
 
 var counts = {};
 var measures = {};
+var MAX_SAMPLES = 1000;
 
 var metrikFilter = through(function(line){
   var hasMetrics = false;
   if(/(count|measure)#/.test(line)){
-    hasMetrics = true;
     //hack to get the leading BS out of the line
     if(/\[[\w\.]+\]\:/.test(line)){
       line = line.split(']:').slice(1).join()
@@ -26,14 +26,20 @@ var metrikFilter = through(function(line){
     for(var i in keys){
       var key = keys[i];
       if(/count#/.test(key)){
+        hasMetrics = true;
         counts[key] = counts[key] || {}
         data[key]   = parseInt(data[key]) + (counts[key][key] || 0)
         counts[key] = data
       }
 
       if(/measure#/.test(key)){
-        measures[key] = measures[key] || []
         var number = parseFloat(data[key])
+        if(isNaN(number)) {
+          hasMetrics = false;
+          continue;
+        }
+        measures[key] = measures[key] || []
+        hasMetrics = true;
         var units  = data[key].match(/[a-zA-Z]+$/)
         if(units) measures[key].units = units[0]
         measures[key].push(number)
@@ -49,12 +55,23 @@ var metrikFilter = through(function(line){
 })
 
 var flushMetrics = function(){
-  stats.counts(counts);
-  counts = {}
-  if(argv.histo){
-    stats.histo_measures(measures, argv.histo);
+  if(Object.keys(counts).length > 0){
+    for(var key in counts){
+      logfmt.log(counts[key])
+    }
   }
-  else { stats.sample_measures(measures); }
+  counts = {}
+
+  if(Object.keys(measures).length > 0){
+    for(var key in measures){
+      if(measures[key].length === 0) continue;
+      if(argv.histo){
+        logfmt.log(stats.histo_measures(measures, argv.histo));
+      }
+      else { logfmt.log(stats.sample_measures(measures)); }
+      if(measures[key].length > MAX_SAMPLES) measures[key] = null;
+    }
+  }
 }
 
 process.stdin

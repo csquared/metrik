@@ -20,15 +20,6 @@ exports.perc99 = function perc99(array){
   return array[top_99];
 }
 
-
-exports.counts = function(counts){
-  if(Object.keys(counts).length > 0){
-    for(var key in counts){
-      logfmt.log(counts[key])
-    }
-  }
-}
-
 exports.sample_measures = function(measures){
   if(Object.keys(measures).length > 0){
     for(var key in measures){
@@ -48,8 +39,7 @@ exports.sample_measures = function(measures){
       data.now = (new Date()).getTime();
       data.n = n
       data.type = 'avg'
-      logfmt.log(data)
-      if(n > 100) measures[key] = [];
+      return data;
     }
   }
 }
@@ -92,7 +82,6 @@ exports.histo_measures = function(measures, bins){
       data.units = units;
       data.type = 'histo'
       logfmt.log(data)
-      if(n > 100) measures[key] = [];
     }
   }
 }

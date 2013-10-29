@@ -41,6 +41,18 @@ suite('metrik', function(){
     }))
   })
 
+  test('measure# doesnt blow up on true', function(done){
+    var metrik = spawn('./bin/metrik');
+    metrik.stdin.write('measure#thing=true')
+    metrik.stdin.end();
+
+    metrik.stdout.pipe(concat(function(data){
+      var logged = data.toString();
+      assert.equal(logged, 'measure#thing=true\n')
+      done();
+    }))
+  })
+
   test('measure# gets n, units, mean, median, perc95, and perc99', function(done){
     var metrik = spawn('./bin/metrik');
 
