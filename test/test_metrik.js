@@ -34,7 +34,6 @@ suite('metrik', function(){
 
     metrik.stdout.pipe(concat(function(data){
       var logged = logfmt.parse(data.toString());
-      console.log(logged);
       assert.equal(logged['sample#thing.count'], '20')
       assert.equal(logged['sample#thing.sum'], '410')
       assert.equal(logged['sample#thing.min'], '10')
