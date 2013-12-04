@@ -14,7 +14,9 @@
     "through": "~2.3.4",
     "split": "~0.2.10",
     "optimist": "~0.6.0",
-    "underscore": "~1.5.2"
+    "underscore": "~1.5.2",
+    "eep": "~0.3.0",
+    "rx": "~2.2.9"
   },
   "devDependencies": {
     "concat-stream": "~1.0.1",

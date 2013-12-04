@@ -4,6 +4,7 @@ var concat = require('concat-stream');
 var assert = require('assert');
 var stats  = require('../stats')
 
+/*
 suite('stats', function(){
   test('perc95 and perc99 w. n=100', function(){
     var array = []
@@ -54,3 +55,4 @@ suite('metrik math', function(){
     }))
   })
 })
+*/

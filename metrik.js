@@ -8,8 +8,11 @@ var stats   = require('./stats')
 stats.precision = argv.p || argv.precision;
 stats.separator = argv.s || argv.separator;
 
+var stats2 = require('./stats2');
+
 var counts = {};
 var measures = {};
+var tumblers = {};
 
 var metrikFilter = through(function(line){
   var hasMetrics = false;
@@ -38,6 +41,7 @@ var metrikFilter = through(function(line){
         if(units) measures[key].units = units[0]
         measures[key].push(number)
         measures[key].source = data.source
+        stats2.push(key, number);
       }
     }
   }

@@ -30,6 +30,7 @@ exports.counts = function(counts){
   }
 }
 
+/*
 exports.sample_measures = function(measures){
   if(Object.keys(measures).length > 0){
     for(var key in measures){
@@ -77,3 +78,4 @@ exports.histo_measures = function(measures){
     }
   }
 }
+*/
