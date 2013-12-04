@@ -36,3 +36,12 @@ module.exports.push = function(key, number, size) {
   tumblers[key] = tumblers[key] || createTumbler(key, size);
   tumblers[key].enqueue(number);
 }
+
+exports.counts = function(counts){
+  if(Object.keys(counts).length > 0){
+    for(var key in counts){
+      //counts[key].metrik = key.replace('count#','')
+      logfmt.log(counts[key])
+    }
+  }
+}

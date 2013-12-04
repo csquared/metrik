@@ -4,10 +4,6 @@ var split   = require('split');
 var argv    = require('optimist').argv;
 var _       = require('underscore')
 
-var stats   = require('./stats')
-stats.precision = argv.p || argv.precision;
-stats.separator = argv.s || argv.separator;
-
 var stats2 = require('./stats2');
 
 var counts = {};
@@ -53,7 +49,7 @@ var metrikFilter = through(function(line){
 })
 
 var flushMetrics = function(){
-  stats.counts(counts);
+  stats2.counts(counts);
   counts = {}
 }
 
