@@ -2,7 +2,7 @@ var spawn  = require('child_process').spawn;
 var logfmt = require('logfmt');
 var concat = require('concat-stream');
 var assert = require('assert');
-var stats2 = require('../stats2');
+var stats2 = require('../stats');
 
 suite('eep', function(){
   test('does not log before defaultSize samples', function(done){
