@@ -1,62 +1,28 @@
-var logfmt  = require('logfmt');
-var through = require('through');
-var split   = require('split');
 var argv    = require('optimist').argv;
-var _       = require('underscore')
+var split   = require('split');
+var through = require('through');
 
-var stats = require('./stats');
+var f = filters = require('./filters');
 
-var counts = {};
-var measures = {};
-var tumblers = {};
+var compressCounts  = argv.c || argv.count
+var compressMeasure = argv.m || argv.measure
+var stripHeroku     = argv.s || argv.strip
 
-var metrikFilter = through(function(line){
-  var hasMetrics = false;
-  if(/(count|measure)#/.test(line)){
-    hasMetrics = true;
-    //hack to get the leading BS out of the line
-    if(/\[[\w\.]+\]\:/.test(line)){
-      line = line.split(']:').slice(1).join()
-    }
-    var data = logfmt.parse(line);
-    var keys = Object.keys(data);
-
-    //add metrics to hashes
-    for(var i in keys){
-      var key = keys[i];
-      if(/count#/.test(key)){
-        counts[key] = counts[key] || {}
-        data[key]   = parseInt(data[key]) + (counts[key][key] || 0)
-        counts[key] = data
-      }
-
-      if(/measure#/.test(key)){
-        measures[key] = measures[key] || []
-        var number = parseFloat(data[key])
-        var units  = data[key].match(/[a-zA-Z]+$/)
-        if(units) measures[key].units = units[0]
-        measures[key].push(number)
-        measures[key].source = data.source
-        stats.push(key, number);
-      }
-    }
-  }
-
-  //send lines w.o metrics through the pipe
-  if(!hasMetrics){
-    this.queue(line + "\n")
-  }
+//add newlines back from split
+var newLines = through(function(line){
+  if(!line) return;
+  this.queue(line.replace(/\n$/,'') + "\n")
 })
 
-var flushMetrics = function(){
-  stats.counts(counts);
-  counts = {}
-}
+var thisPipe = process.stdin.pipe(split())
+if(stripHeroku)     thisPipe = thisPipe.pipe(f.herokuFilter);
+if(compressCounts)  thisPipe = thisPipe.pipe(f.countFilter);
+if(compressMeasure) thisPipe = thisPipe.pipe(f.measureFilter);
+thisPipe.pipe(newLines).pipe(process.stdout)
 
-process.stdin
-  .pipe(split())
-  .pipe(metrikFilter)
-  .pipe(process.stdout)
+var flushMetrics = function(){
+  filters.flush(process.stdout);
+}
 
 process.on('SIGINT', flushMetrics)
 process.on('exit', flushMetrics)

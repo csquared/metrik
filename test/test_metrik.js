@@ -5,7 +5,7 @@ var assert = require('assert');
 
 suite('metrik', function(){
   test('count# gets summed', function(done){
-    var metrik = spawn('./bin/metrik');
+    var metrik = spawn('./bin/metrik', ['-c']);
 
     metrik.stdout.pipe(concat(function(data){
       var logged = logfmt.parse(data.toString());
@@ -20,7 +20,7 @@ suite('metrik', function(){
   })
 
   test('measure# gets count, sum, min, max, mean, variance, and stdev', function(done){
-    var metrik = spawn('./bin/metrik');
+    var metrik = spawn('./bin/metrik', ['-m']);
 
     for(var i=0; i<20; i++){
       metrik.stdin.write('measure#thing=10ms\n')
@@ -33,14 +33,15 @@ suite('metrik', function(){
     metrik.stdin.end();
 
     metrik.stdout.pipe(concat(function(data){
-      var logged = logfmt.parse(data.toString());
+      data = data.toString().replace("\n",'');
+      var logged = logfmt.parse(data);
       assert.equal(logged['sample#thing.count'], '20')
       assert.equal(logged['sample#thing.sum'], '410')
       assert.equal(logged['sample#thing.min'], '10')
       assert.equal(logged['sample#thing.max'], '30')
       assert.equal(logged['sample#thing.mean'], '20.5')
       assert.equal(logged['sample#thing.variance'], '68.15789473684211')
-      assert.equal(logged['sample#thing.stdev'], '8.255779474818965\n')
+      assert.equal(logged['sample#thing.stdev'], '8.255779474818965')
       done();
     }))
   })
@@ -77,7 +78,7 @@ suite('metrik', function(){
       done();
     }))
 
-    metrik.stdin.write("dont fuck with this");
+    metrik.stdin.write("dont fuck with this\n");
     metrik.stdin.end();
   })
 })

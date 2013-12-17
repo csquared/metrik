@@ -6,22 +6,22 @@ var stats2 = require('../stats');
 
 suite('eep', function(){
   test('does not log before defaultSize samples', function(done){
-    var metrik = spawn('./bin/metrik');
+    var metrik = spawn('./bin/metrik', ['-m']);
 
     for(var i=0; i < stats2.defaultSize-1; i++){
       metrik.stdin.write('measure#thing=' + i + '\n')
     }
+    metrik.stdin.write("count#foo=bar\n")
     metrik.stdin.end();
 
     metrik.stdout.pipe(concat(function(data){
-      data = data.toString().replace("\n",'');
-      assert.equal('', data);
+      assert.equal("count#foo=bar\n", data);
       done();
     }))
   })
 
   test('log data at defaultSize samples', function(done){
-    var metrik = spawn('./bin/metrik');
+    var metrik = spawn('./bin/metrik', ['-m']);
 
     for(var i=0; i < stats2.defaultSize; i++){
       metrik.stdin.write('measure#thing=' + i + '\n')
