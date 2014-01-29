@@ -16,6 +16,11 @@ exports.herokuFilter = through(function(line){
   }
 })
 
+exports.setDefaultSize = function setDefaultSize(size){
+  stats.defaultSize = size;
+  return this;
+}
+
 exports.countFilter = through(function(line){
   if(!line) return;
   if(/count#/.test(line)){

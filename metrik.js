@@ -7,6 +7,9 @@ var f = filters = require('./filters');
 var compressCounts  = argv.c || argv.count
 var compressMeasure = argv.m || argv.measure
 var stripHeroku     = argv.s || argv.strip
+var windowSize      = argv.w || argv.window || 20;
+
+f.setDefaultSize(windowSize);
 
 //add newlines back from split
 var newLines = through(function(line){
