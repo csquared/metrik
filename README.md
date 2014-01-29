@@ -21,6 +21,8 @@ for a rolling window.
 
 Enable with `-m`
 
+Set tumbling window size with `-w`
+
 
 ## Usage
 
